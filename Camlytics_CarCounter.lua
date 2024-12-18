@@ -80,7 +80,7 @@ end
 
 updateTimer = Timer.New()
 
-updateTimer.EventHandler = function()
+updateTimer.EventHandler = function()           --Rework to integrate with ShowHours
   local min =  string.sub(os.date("%M"), -1,-1)
   if min == "0" or min == "5" then
     if tonumber(os.date("%H")) >= 16 then

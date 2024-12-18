@@ -79,3 +79,14 @@ else
   CheckTimer:Stop()
   Controls.Status.String = "Outside of Transmit Hours"
 end
+
+
+Controls.FMPower.EventHandler = function()
+  if Controls.FMPower.Boolean then 
+    CheckTimer:Start(600)
+    Controls.Status.String = "Starting FM Monitoring - Check in 10 Mins"
+  else
+    CheckTimer:Stop()
+    Controls.Status.String = "Outside of Transmit Hours"
+  end
+end

@@ -92,7 +92,7 @@ function Evaluate ()
   elseif curTime >= startTime and curTime <= ShowStop then
     debugprint("ShowTime")
     Controls.AfterHours.Boolean = false
-    Controls.FM_Power.Boolean = false
+    Controls.FM_Power.Boolean = true
     Controls.ShowHours.Boolean = true
     Controls.Status.String = "ShowTime"
   elseif curTime > ShowStop and curTime <= TXStop then

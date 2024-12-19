@@ -41,7 +41,7 @@ for idx,ctl in ipairs(Controls.Player) do
       Players[i].SendMultiSync.Boolean = i==idx
 
       if v.Boolean then 
-        Timer.CallAfter(function() Players[i].Volume.Value = 89 end, 20)  --Reset player volume as they drift over time but don't report back in API
+        Timer.CallAfter(function() Players[i].Volume.Value = 89 end, 20)
         Timer.CallAfter(function() Players[i].Volume.Value = 90 end, 21)
       end
     end
@@ -52,23 +52,35 @@ end
 --      Player 1 Status Monitoring      --
 ----------------------------------------------------------------------------------------------------------------------------------------
 Players[1].Status.EventHandler = function(ctl)
+  print(ctl.String)
+  print(Controls.AfterHours.Boolean)
+  print(Controls.ShowHours.Boolean)
   if Lockout == false and Controls.FailoverEnable.Boolean then 
     if Controls.AfterHours.Boolean or Controls.ShowHours.Boolean then 
       if Controls.Player[1].Boolean then 
-        if ctl.String ~= "OK - player playing" then
+        print(ctl.String)
+        if ctl.String ~= "OK - player playing" and ctl.String ~= "OK - player stopping gracefully" then
           print("Primary Player Not Playing - Starting 30s Countdown")
-          FailOver:Start(60)
+          FailOver:Start(120)
           Lockout = true
         else 
           FailOver:Stop()
+          Lockout = false
+          print("Stopping Lockout Timer - sTATUS IS GOOD")
         end
       else 
         FailOver:Stop()
+        Lockout = false
+        print("Stopping Lockout Timer - Secondary is Main")
       end
       else
         FailOver:Stop()
+        Lockout = false
+        print("Stopping Lockout Timer - Not After Hours / ShowHours")
     end
   else
     FailOver:Stop()
+    Lockout = false
+    print("Stopping Lockout Timer - Lockout  Set / Failover Disabled")
   end
 end

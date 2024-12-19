@@ -22,13 +22,19 @@ FailOver = Timer.New()
 FailOver.EventHandler = function()
   FailOver:Stop()
   Lockout = false
-  print("PRIMARY FAILURE - Starting Secondary")
-  Players[1].SendMultiSync.Boolean = false
-  Players[2].SendMultiSync.Boolean = true 
-  Controls.Player[1].Boolean = false 
-  Controls.Player[2].Boolean = true
-  Timer.CallAfter(function() Players[2].Volume.Value = 89 end, 20)
-  Timer.CallAfter(function() Players[2].Volume.Value = 90 end, 21)
+  if Controls.AfterHours.Boolean or Controls.ShowHours.Boolean then 
+    if Controls.Player[1].Boolean then 
+      if ctl.String ~= "OK - player playing" and ctl.String ~= "OK - player stopping gracefully" then
+        print("Primary Player Still in Fault - Switching to Secondary")
+        Players[1].SendMultiSync.Boolean = false
+        Players[2].SendMultiSync.Boolean = true 
+        Controls.Player[1].Boolean = false 
+        Controls.Player[2].Boolean = true
+        Timer.CallAfter(function() Players[2].Volume.Value = 89 end, 20)
+        Timer.CallAfter(function() Players[2].Volume.Value = 90 end, 21)
+      end
+    end
+  end
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -82,5 +88,17 @@ Players[1].Status.EventHandler = function(ctl)
     FailOver:Stop()
     Lockout = false
     print("Stopping Lockout Timer - Lockout  Set / Failover Disabled")
+  end
+end
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+--      Stop On AfterHours Over      --
+----------------------------------------------------------------------------------------------------------------------------------------
+
+Controls.AfterHours.EventHandler = function (ctl)
+  if not ctl.Boolean then
+    FailOver:Stop()
+    Lockout = false
+    print("Stopping Lockout Timer - AfterHours is Over")
   end
 end

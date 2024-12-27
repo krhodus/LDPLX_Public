@@ -6,7 +6,7 @@ let CONFIG = {
   endpoints: [
     "http://10.0.60.12",
     "http://10.0.60.13",
-    "http://mqtt.ldplxnet:18083/",
+    "http://mqtt.ldplxnet/",
     
   ],
   //number of failures that trigger the reset
